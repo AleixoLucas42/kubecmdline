@@ -1,7 +1,7 @@
 #!/bin/bash
 
 fzf_commands=("logs" "exec" "port-forward");
-fzf_namespace=("Current" "All");
+fzf_namespace=("Current" "Select");
 fzf_forward_resource=("svc" "pod");
 fzf_default_params="--reverse"
 
@@ -20,14 +20,14 @@ function set_namespace {
     "Current")
         export namespace="-n $(kubectl config view --minify --output 'jsonpath={..namespace}')"
         ;;
-    "All")
-        export namespace="--all-namespaces"
+    "Select")
+        change_namespace
         ;;
     esac;
 }
 
 function set_pod {
-    export pod=$(kubectl $namespce get pods | awk 'NR>1 {print $1}' | fzf --header="Select pod" $fzf_default_params)
+    export pod=$(kubectl $namespace get pods | awk 'NR>1 {print $1}' | fzf --header="Select pod" $fzf_default_params)
 }
 
 function set_forward_finalizer {
@@ -44,7 +44,7 @@ function set_forward_finalizer {
     "pod")
         set_pod
         while true; do
-            echo -n "container target port: "
+            echo -n "[+] Container target port: "
             read -r port
             if [[ $port =~ ^[0-9]+$ ]]; then
                 if [ "$port" -lt 1024 ]; then
@@ -57,6 +57,10 @@ function set_forward_finalizer {
         done
         ;;
     esac
+}
+
+function change_namespace {
+    export namespace="-n $(kubectl get namespace | awk 'NR>1 {print $1}' | fzf --header="Select namespace" $fzf_default_params)"
 }
 
 function set_logs_finalizer {
