@@ -1,10 +1,5 @@
 #!/bin/bash
 
-fzf_commands=("logs" "exec" "port-forward" "describe");
-fzf_namespace=("Current" "Select");
-fzf_resources=("svc" "pod");
-fzf_default_params="--reverse"
-
 function start {
     selected_command=$(printf "%s\n" "${fzf_commands[@]}" | fzf --header="Select command" $fzf_default_params)
     set_namespace
@@ -40,7 +35,16 @@ function set_describe_finalizer {
         set_pod
         export finalizer="pod $pod"
         ;;
+    "node")
+        set_node
+        export finalizer="node $node"
+        ;;
     esac
+}
+
+function set_node {
+    select_node=$(kubectl get nodes | awk 'NR>1 {print $1}' | fzf --header="Select node" $fzf_default_params)
+    export node=$select_node
 }
 
 function set_forward_finalizer {
@@ -101,6 +105,7 @@ function set_resource {
         set_logs_finalizer $pod
         ;;
     "describe")
+        fzf_resources+=("node")
         export resource_kind=$(printf "%s\n" "${fzf_resources[@]}" | fzf --header="Select kind" $fzf_default_params)
         set_describe_finalizer $resource_kind
         ;;
@@ -110,6 +115,10 @@ function set_resource {
 if [[ "$1" == "--help" ]] || [[ "$1" == "-h" ]]; then
     echo -e "\nWelcome to kubefzf!, with kubefzf you will combine the power of fzf in the kubectl command line, so you don't have to list and copy resource names before using the kubectl command, everything will be interactive and you will choose through a menu that has a filter. You need to have fzf installed in your system."
 else
+    fzf_commands=("logs" "exec" "port-forward" "describe");
+    fzf_namespace=("Current" "Select");
+    fzf_resources=("svc" "pod");
+    fzf_default_params="--reverse"
     start
 fi
 
