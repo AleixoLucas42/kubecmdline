@@ -1,4 +1,4 @@
-## Kubefzf
+# Kubefzf
 Welcome to kubefzf!, with kubefzf you will combine the power of [fzf](https://github.com/junegunn/fzf) in the kubectl command line, so you don't have to list and copy resource names before using the kubectl command, everything will be interactive and you will choose through a menu that has a filter. You need to have [fzf](https://github.com/junegunn/fzf) installed in your system.
 
 
