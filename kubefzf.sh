@@ -1,8 +1,8 @@
 #!/bin/bash
 
-fzf_commands=("logs" "exec" "port-forward");
+fzf_commands=("logs" "exec" "port-forward" "describe");
 fzf_namespace=("Current" "Select");
-fzf_forward_resource=("svc" "pod");
+fzf_resources=("svc" "pod");
 fzf_default_params="--reverse"
 
 function start {
@@ -28,6 +28,19 @@ function set_namespace {
 
 function set_pod {
     export pod=$(kubectl $namespace get pods | awk 'NR>1 {print $1}' | fzf --header="Select pod" $fzf_default_params)
+}
+
+function set_describe_finalizer {
+    case $1 in
+    "svc")
+        service=$(kubectl $namespace get services | awk 'NR>1 {print $1}' | fzf --header="Select service" $fzf_default_params)
+        export finalizer="svc $service"
+        ;;
+    "pod")
+        set_pod
+        export finalizer="pod $pod"
+        ;;
+    esac
 }
 
 function set_forward_finalizer {
@@ -76,7 +89,7 @@ function set_exec_finalizer {
 function set_resource {
     case $selected_command in
     "port-forward")
-        export resource_kind=$(printf "%s\n" "${fzf_forward_resource[@]}" | fzf --header="Select kind" $fzf_default_params)
+        export resource_kind=$(printf "%s\n" "${fzf_resources[@]}" | fzf --header="Select kind" $fzf_default_params)
         set_forward_finalizer $resource_kind
         ;;
     "exec")
@@ -86,6 +99,10 @@ function set_resource {
     "logs")
         set_pod
         set_logs_finalizer $pod
+        ;;
+    "describe")
+        export resource_kind=$(printf "%s\n" "${fzf_resources[@]}" | fzf --header="Select kind" $fzf_default_params)
+        set_describe_finalizer $resource_kind
         ;;
     esac
 }
