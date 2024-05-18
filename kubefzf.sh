@@ -91,7 +91,7 @@ function set_resource {
 }
 
 if [[ "$1" == "--help" ]] || [[ "$1" == "-h" ]]; then
-    echo "\nWelcome to kubefzf!, with kubefzf you will combine the power of fzf in the kubectl command line, so you don't have to list and copy resource names before using the kubectl command, everything will be interactive and you will choose through a menu that has a filter. You need to have fzf installed in your system."
+    echo -n "\nWelcome to kubefzf!, with kubefzf you will combine the power of fzf in the kubectl command line, so you don't have to list and copy resource names before using the kubectl command, everything will be interactive and you will choose through a menu that has a filter. You need to have fzf installed in your system."
 else
     start
 fi
