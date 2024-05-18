@@ -7,7 +7,7 @@ Welcome to kubefzf!, with kubefzf you will combine the power of [fzf](https://gi
 ### Install
 ```
 INSTALATION_PATH=~/.kubefzf # you can change here
-git clone git@github.com:AleixoLucas42/kubefzf.git $INSTALATION_PATH
+git clone --depth 1 git@github.com:AleixoLucas42/kubefzf.git $INSTALATION_PATH
 echo "alias kf='sh $INSTALATION_PATH/kubefzf.sh'" >> ~/.zshrc 
 echo "alias kf='sh $INSTALATION_PATH/kubefzf.sh'" >> ~/.bashrc # optional
 source ~/.bashrc
