@@ -39,12 +39,21 @@ function set_describe_finalizer {
         set_node
         export finalizer="node $node"
         ;;
+    "ingress")
+        set_ingress
+        export finalizer="ingress $ingress"
+        ;;
     esac
 }
 
 function set_node {
-    select_node=$(kubectl get nodes | awk 'NR>1 {print $1}' | fzf --header="Select node" $fzf_default_params)
+    select_node=$(kubectl $namespace get nodes | awk 'NR>1 {print $1}' | fzf --header="Select node" $fzf_default_params)
     export node=$select_node
+}
+
+function set_ingress {
+    select_ingress=$(kubectl $namespace get ingress | awk 'NR>1 {print $1}' | fzf --header="Select ingress" $fzf_default_params)
+    export ingress=$select_ingress
 }
 
 function set_forward_finalizer {
@@ -105,7 +114,7 @@ function set_resource {
         set_logs_finalizer $pod
         ;;
     "describe")
-        fzf_resources+=("node")
+        fzf_resources+=("node" "ingress")
         export resource_kind=$(printf "%s\n" "${fzf_resources[@]}" | fzf --header="Select kind" $fzf_default_params)
         set_describe_finalizer $resource_kind
         ;;
