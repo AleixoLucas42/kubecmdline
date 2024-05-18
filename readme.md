@@ -24,4 +24,5 @@ rm -rf $INSTALATION_PATH
 
 ### Usage
 Just type `kf` and you will get it
+
 ![usage](assets/img/kubefzf.gif)
