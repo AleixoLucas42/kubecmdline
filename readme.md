@@ -21,3 +21,7 @@ INSTALATION_PATH=~/.kubefzf # you can change here
 sed -i "/alias kf='sh ${INSTALATION_PATH//\//\\/}\/kubefzf.sh'/d" ~/.bashrc ~/.zshrc # remove alias
 rm -rf $INSTALATION_PATH
 ```
+
+### Usage
+Just type `kf` and you will get it
+![usage](assets/img/kubefzf.gif)
